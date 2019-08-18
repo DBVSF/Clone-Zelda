@@ -6,13 +6,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 //import java.awt.Graphics2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
-public class Game extends Canvas implements Runnable {
+import com.VsfStudio.world.World;
+import com.VsfStudios.entities.Entity;
+import com.VsfStudios.entities.Player;
+import com.VsfStudios.graficos.Spritesheet;;
+
+public class Game extends Canvas implements Runnable, KeyListener {
 	
 	 /**
 	 * 
@@ -25,33 +34,32 @@ public class Game extends Canvas implements Runnable {
 	 private final int HEIGHT = 160;
 	 private final int SCALE = 3;
 	 private BufferedImage image;
-	 /*
-	 private Spritesheet sheet;
-	 private BufferedImage[]player;
-	 private int frames = 0;
-	 private int maxFrames = 1110;
-	 private int curAnimation = 0,maxAnimation=3;
-	 */
+	 
+	 public List<Entity> entities;
+	 public static Spritesheet spritesheet; 
+	 public static World world;
+	 private Player player;
 	
+	
+
+	 
 	public Game () {
 		
-		/*sheet = new Spritesheet("/spritesheet.png");
-		player = new BufferedImage[4];
-		player[0] = sheet.getSprite(0, 0, 16, 16);
-		player[1] = sheet.getSprite(16, 0, 16, 16);
-		player[2] = sheet.getSprite(32, 0, 16, 16);
-		player[3] = sheet.getSprite(48, 0, 16, 16);
-		*/
+		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		initFrame();
+		
 		image = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_RGB);
+		entities = new ArrayList<Entity>();
+		spritesheet = new Spritesheet("/spritesheet.png");
+		world = new World("/map.png");
 		
-
-		
+		player = new Player (0,0,16,16,spritesheet.getSprite(32, 0, 16, 16));
+		entities.add(player);
 	}
 	 public void initFrame(){
 	        
-	        frame = new JFrame("Game#1");
+	        frame = new JFrame("Quaiatto Symphony");
 	        frame.add(this);
 	        //nao poder mudar as dimensões 
 	        frame.setResizable(false);
@@ -112,18 +120,14 @@ public class Game extends Canvas implements Runnable {
 	}
 		
 	public void tick(){
-		/*
-		frames++;
-		if(frames > maxFrames) {
-			frames = 0;
-			curAnimation++;
-			
-			if(curAnimation >= maxAnimation) {
-				curAnimation = 0;
+		for (int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			if (e instanceof Player) {
+				//tick no player
 			}
+			e.tick();
 		}
-		*/ 
-		 
+		
 		 
 	    }
 	
@@ -137,12 +141,15 @@ public class Game extends Canvas implements Runnable {
             return;
         }
         Graphics g = image.getGraphics();
-        //cor do backgroud
+        g.setColor(new Color( 0,0,0));
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+        
+        world.render(g);
         
         
         g.setFont(new Font("Arial",Font.BOLD,20));
         g.setColor(Color.white);
-        g.drawString("vsffffffffffffffffffffffff",19, 19);
+        g.drawString("Quaiatto Symphony ",19, 19);
         g.setColor(Color.MAGENTA);
         
         //render game
@@ -150,12 +157,61 @@ public class Game extends Canvas implements Runnable {
         
         //g2.drawImage(player[curAnimation], 90, 90, null);
         
+        for (int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			e.render(g);
+		}
+        
+        
         g.dispose();
         g = bs.getDrawGraphics();
         //preenchendo o background
         g.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
         bs.show();
     }
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
+			//andar para a direita
+			player.right = true;
+		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
+			//andar para a esquerda
+			player.left = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+			//ANDAR PARA CIMA
+			player.up = true;
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+			//ANDAR PARA BAIXO
+			player.down = true;
+			
+		}
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
+			//andar para a direita
+			player.right = false;
+		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
+			//andar para a esquerda
+			player.left = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+			//ANDAR PARA CIMA
+			player.up = false;
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+			//ANDAR PARA BAIXO
+			player.down = false;
+		}
+		
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
     
 	
 	 
