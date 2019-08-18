@@ -30,15 +30,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static JFrame frame;
 	 private Thread thread;
 	 private boolean isRunning = true;
-	 private final int WIDTH = 240;
-	 private final int HEIGHT = 160;
-	 private final int SCALE = 3;
+	 private final int WIDTH = 320;
+	 private final int HEIGHT = 240;
+	 private final int SCALE = 2;
 	 private BufferedImage image;
 	 
-	 public List<Entity> entities;
+	 public static List<Entity> entities;
 	 public static Spritesheet spritesheet; 
 	 public static World world;
-	 private Player player;
+	 public static Player player;
 	
 	
 
@@ -52,10 +52,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		image = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_RGB);
 		entities = new ArrayList<Entity>();
 		spritesheet = new Spritesheet("/spritesheet.png");
-		world = new World("/map.png");
-		
 		player = new Player (0,0,16,16,spritesheet.getSprite(32, 0, 16, 16));
 		entities.add(player);
+		world = new World("/map.png");
+		
+		
+		
 	}
 	 public void initFrame(){
 	        
@@ -69,15 +71,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        //executou apareceu
 	        frame.setVisible(true);
-	        
 	    }
 	 public synchronized void start (){
-	        
 	        thread = new Thread(this);
 	        thread.start();
 	        isRunning = true;
-	        
 	    }
+	 
 	 public synchronized void stop (){
 	        
 	        //parar caso dê erro
@@ -92,12 +92,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	  public static void main(String[] args) {
 	        Game game = new Game();
 	        game.start();
-	        
 	    }
 	    
 
 	
-	public void run() {
+	  public void run() {
 		// TODO Auto-generated method stub
 		//loop avançado para 60 frames por segundo
         long lastTime = System.nanoTime();
@@ -127,8 +126,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			}
 			e.tick();
 		}
-		
-		 
 	    }
 	
 	
@@ -188,7 +185,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			
 		}
 	}
-	@Override
+	
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
 			//andar para a direita

@@ -3,8 +3,14 @@ package com.VsfStudios.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Entity {
+import com.VsfStudio.main.Game;
 
+public class Entity {
+	
+	public static BufferedImage LIFEPACK_EN = Game.spritesheet.getSprite(6*16, 0, 16, 16);
+	public static BufferedImage WEAPON_EN = Game.spritesheet.getSprite(7*16, 0, 16, 16);
+	public static BufferedImage ENEMY_EN = Game.spritesheet.getSprite(6*16, 16, 16, 16);
+	
 	
 	 //tudo oq tem colisão 
 	protected double x;
@@ -21,6 +27,14 @@ public class Entity {
 		this.h = h;
 		this.sprite = sprite;
 	}
+	public void setX(int newX) {
+		this.x = newX;
+	}
+	public void setY(int newY) {
+		this.y = newY;
+	}
+	
+
 	public int getX() {
 		return(int) this.x;
 	}

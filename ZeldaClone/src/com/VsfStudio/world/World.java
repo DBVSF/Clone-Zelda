@@ -6,6 +6,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.VsfStudio.main.Game;
+import com.VsfStudios.entities.*;
+
+
 public class World {
 	
 	private Tile[] tiles;
@@ -24,6 +28,7 @@ public class World {
 				
 				for (int yy = 0; yy < map.getHeight(); yy++) {
 					int pixelAtual = pixels[xx +(yy * map.getWidth())];
+					tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
 					if (pixelAtual == 0xFF000000 ) {
 						//chão 
 						tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
@@ -32,11 +37,21 @@ public class World {
 						tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_WALL);
 					}else if(pixelAtual == 0xFF0026FF) {
 						//player
-						tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
-					}else {
-						//chão
-						tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
+						Game.player.setX(xx*16);
+						Game.player.setY(yy*16);
 						
+						
+						//tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
+					}else if (pixelAtual == 0xFFFF0000) {
+						//enemy
+						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY_EN));
+						//tiles[xx+(yy * WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);	
+					}else if (pixelAtual == 0xFFFFD800) {
+						//weapon
+						Game.entities.add(new Weapon(xx*16, yy*16, 16, 16, Entity.WEAPON_EN));	
+					}else if (pixelAtual == 0xFF808080) {
+						//lifePack
+						Game.entities.add(new LifePack(xx*16, yy*16, 16, 16, Entity.LIFEPACK_EN));	
 					}
 					
 				} {
