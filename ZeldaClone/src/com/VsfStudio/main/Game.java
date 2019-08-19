@@ -13,10 +13,12 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
 import com.VsfStudio.world.World;
+import com.VsfStudios.entities.Enemy;
 import com.VsfStudios.entities.Entity;
 import com.VsfStudios.entities.Player;
 import com.VsfStudios.graficos.Spritesheet;;
@@ -30,16 +32,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static JFrame frame;
 	 private Thread thread;
 	 private boolean isRunning = true;
-	 private final int WIDTH = 320;
-	 private final int HEIGHT = 240;
-	 private final int SCALE = 2;
+	 public static final int WIDTH = 240;
+	 public static final int HEIGHT = 160;
+	 public final int SCALE = 3;
 	 private BufferedImage image;
 	 
 	 public static List<Entity> entities;
+	 public static List<Enemy> enemies;
 	 public static Spritesheet spritesheet; 
 	 public static World world;
 	 public static Player player;
-	
+	 public static Random rand;
 	
 
 	 
@@ -48,9 +51,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		initFrame();
-		
+		rand = new Random();
 		image = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_RGB);
 		entities = new ArrayList<Entity>();
+		enemies = new ArrayList<Enemy>();
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player (0,0,16,16,spritesheet.getSprite(32, 0, 16, 16));
 		entities.add(player);
@@ -103,7 +107,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
         double delta = 0;
-        
+        requestFocus();
         while(isRunning){
             
             long now = System.nanoTime();
@@ -146,7 +150,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         
         g.setFont(new Font("Arial",Font.BOLD,20));
         g.setColor(Color.white);
-        g.drawString("Quaiatto Symphony ",19, 19);
+        g.drawString("",19, 19);
         g.setColor(Color.MAGENTA);
         
         //render game

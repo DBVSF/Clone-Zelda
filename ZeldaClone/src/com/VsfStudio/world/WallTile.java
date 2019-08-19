@@ -8,5 +8,4 @@ public class WallTile  extends Tile{
 		super(x, y, sprite);
 		
 	}
-
 }
