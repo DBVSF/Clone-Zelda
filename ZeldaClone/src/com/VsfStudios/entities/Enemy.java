@@ -10,11 +10,11 @@ import com.VsfStudio.world.World;
 
 public class Enemy extends Entity {
 	
-	private double speed = 0.007;
+	private double speed = 0.01;
 	
 	private int maskx =8, masky = 8, maskw = 10, maskh =10; 
 	
-	private int frames = 0, maxFrames = 550, index = 0, maxIndex = 1;
+	private int frames = 0, maxFrames = 500, index = 0, maxIndex = 1;
 	
 	private BufferedImage[]sprites;
 	
@@ -26,7 +26,14 @@ public class Enemy extends Entity {
 				
 	}
 	
+	
+	
 	public void tick () {
+		
+		if(this.isColiddingWithPlayer() == false ) { //< colisão do enemy com o player
+			
+		
+		
 		if ((int)x < Game.player.getX()&& World.isFree((int)(x+speed),this.getY())
 				&& !isColidding((int)(x+speed),this.getY())) {
 			x+=speed;
@@ -40,6 +47,15 @@ public class Enemy extends Entity {
 				&& !isColidding(this.getX(),(int)(y-speed))) {
 			y-=speed;
 		}
+		}else {
+			
+			if (Game.rand.nextInt(100) < 10) {
+				Game.player.life--;
+			
+				System.out.println("life: " + Game.player.life);
+			}
+			
+		}
 			frames++;
 			if (frames == maxFrames) {
 				frames = 0;	
@@ -49,8 +65,16 @@ public class Enemy extends Entity {
 				}
 			}
 		
+		}
 		
+	
+	
+	public boolean isColiddingWithPlayer() {
 		
+		Rectangle enemyCurrent = new Rectangle(this.getX()+maskx, this.getY()+masky,maskw, maskh);
+		Rectangle player = new Rectangle(Game.player.getX(),Game.player.getY(),16,16);
+		
+		return enemyCurrent.intersects(player);
 	}
 	
 	public boolean isColidding (int xnext, int ynext) {

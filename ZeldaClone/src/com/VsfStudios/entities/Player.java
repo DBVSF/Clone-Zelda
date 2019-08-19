@@ -15,10 +15,12 @@ public class Player extends Entity{
 	public int dir = right_dir;
 	
 	
-	private int frames = 0, maxFrames = 550, index = 0, maxIndex = 3;
+	private int frames = 0, maxFrames = 20, index = 0, maxIndex = 3;
 	private boolean moved = false;
 	private BufferedImage[]rightPlayer;
 	private BufferedImage[]leftPlayer;
+	
+	public int life = 100;
 	
 	public Player(int x, int y, int w, int h, BufferedImage sprite) {
 		super(x, y, w, h, sprite);
