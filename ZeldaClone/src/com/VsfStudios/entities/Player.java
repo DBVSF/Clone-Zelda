@@ -10,17 +10,18 @@ import com.VsfStudio.world.World;
 public class Player extends Entity{
 	
 	public boolean right,up,left,down;
-	public double speed = 0.007;
+	public double speed = 0.07;
 	public int right_dir = 0, left_dir = 1;
 	public int dir = right_dir;
 	
 	
-	private int frames = 0, maxFrames = 20, index = 0, maxIndex = 3;
+	private int frames = 0, maxFrames = 550, index = 0, maxIndex = 3;
 	private boolean moved = false;
 	private BufferedImage[]rightPlayer;
 	private BufferedImage[]leftPlayer;
 	
-	public int life = 100;
+	public static double life=100,maxLife=100;
+	
 	
 	public Player(int x, int y, int w, int h, BufferedImage sprite) {
 		super(x, y, w, h, sprite);
@@ -71,10 +72,27 @@ public class Player extends Entity{
 				}
 			}
 		}
+		
+		this.checkColiddionLifePack();
 		//clamp limita a tela apenas nos tiles do mapa, tirando a parte preta da sala
 		Camera.x =Camera.clamp(this.getX()-(Game.WIDTH/2),0,World.WIDTH*16 - Game.WIDTH);
 		Camera.y =Camera.clamp(this.getY()-(Game.HEIGHT/2),0,World.HEIGHT*16 - Game.HEIGHT);
 	}
+	
+	public void checkColiddionLifePack() {
+		for (int i = 0; i < Game.entities.size(); i++) {
+			Entity atual = Game.entities.get(i);
+			if (atual instanceof LifePack) {
+				if (Entity.isColidding(this, atual)) {
+					life +=10;
+					Game.entities.remove(atual);
+				}
+			}
+			
+		}
+	}
+	
+	
 	
 	public void render(Graphics g) {
 		if (dir == right_dir) {

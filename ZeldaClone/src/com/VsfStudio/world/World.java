@@ -52,6 +52,9 @@ public class World {
 					}else if (pixelAtual == 0xFF808080) {
 						//lifePack
 						Game.entities.add(new LifePack(xx*16, yy*16, 16, 16, Entity.LIFEPACK_EN));	
+					}else if (pixelAtual == 0xFFFF565F) {
+						//lifePack
+						Game.entities.add(new Ammo(xx*16, yy*16, 16, 16, Entity.AMMO_EN));	
 					}
 					
 				} {

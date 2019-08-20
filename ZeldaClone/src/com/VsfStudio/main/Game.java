@@ -21,7 +21,8 @@ import com.VsfStudio.world.World;
 import com.VsfStudios.entities.Enemy;
 import com.VsfStudios.entities.Entity;
 import com.VsfStudios.entities.Player;
-import com.VsfStudios.graficos.Spritesheet;;
+import com.VsfStudios.graficos.Spritesheet;
+import com.VsfStudios.graficos.UI;;
 
 public class Game extends Canvas implements Runnable, KeyListener {
 	
@@ -43,6 +44,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	 public static World world;
 	 public static Player player;
 	 public static Random rand;
+	 public UI ui;
 	
 
 	 
@@ -51,6 +53,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		initFrame();
+		ui = new UI();
 		rand = new Random();
 		image = new BufferedImage(WIDTH,HEIGHT, BufferedImage.TYPE_INT_RGB);
 		entities = new ArrayList<Entity>();
@@ -162,6 +165,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			Entity e = entities.get(i);
 			e.render(g);
 		}
+        
+        ui.render(g);
         
         
         g.dispose();
