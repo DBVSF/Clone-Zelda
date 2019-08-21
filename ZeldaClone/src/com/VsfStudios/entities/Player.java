@@ -139,7 +139,8 @@ public class Player extends Entity{
 			Entity atual = Game.entities.get(i);
 			if (atual instanceof Ammo) {
 				if (Entity.isColidding(this, atual)) {
-					ammo++;
+					//quantidade que cada pack de munição da
+					ammo += 30;
 					Game.entities.remove(atual);
 				}
 			}

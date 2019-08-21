@@ -17,6 +17,9 @@ public class Enemy extends Entity {
 	private int frames = 0, maxFrames = 500, index = 0, maxIndex = 1;
 	
 	private BufferedImage[]sprites;
+	private int life = 10;
+	private boolean isDamaged = false;
+	private int demageFrames = 500,demageCurrent = 0;
 	
 	public Enemy(int x, int y, int w, int h, BufferedImage sprite) {
 		super(x, y, w, h, null);
@@ -67,9 +70,43 @@ public class Enemy extends Entity {
 				}
 			}
 		
+			collidingBullet();
+			
+			if (life <= 0) {
+				destroySelf();
+				return;
+			}
+			
+			if (isDamaged) {
+				this.demageCurrent++;
+				if(this.demageCurrent == this.demageFrames) {
+					this.demageCurrent=0;
+					this.isDamaged = false;
+					
+				}
+			}
+			
 		}
 		
+	public void destroySelf() {
+		Game.entities.remove(this);
+	}
 	
+	public void collidingBullet () {
+		for (int i = 0; i <Game.bullets.size(); i++) {
+			Entity e = Game.bullets.get(i);
+			if (e instanceof BulletShoot) {
+				
+				if (Entity.isColidding(this, e)) {
+					isDamaged = true;
+					life--;
+					Game.bullets.remove(i);
+					return;
+				}
+			}
+		}
+		
+	}
 	
 	public boolean isColiddingWithPlayer() {
 		
@@ -95,7 +132,12 @@ public class Enemy extends Entity {
 		return false;	
 }
 	public void render(Graphics g) {
+		if (!isDamaged) {
+			g.drawImage(sprites[index],this.getX() -Camera.x,this.getY() - Camera.y,null);
+		}else {
+			g.drawImage(Entity.ENEMY_DEMAGEFEEDBACK,this.getX() -Camera.x,this.getY() - Camera.y,null);
+		}
 		//super.render(g);
-		g.drawImage(sprites[index],this.getX() -Camera.x,this.getY() - Camera.y,null);
+	
 	}
 }	
