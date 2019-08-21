@@ -50,9 +50,11 @@ public class Enemy extends Entity {
 		}else {
 			
 			if (Game.rand.nextInt(100) < 1) {
-				Game.player.life--;
+				Game.player.life-=Game.rand.nextInt(3);
+				Game.player.isDemaged = true;
 				
-				System.out.println("life: " + Game.player.life);
+				
+				
 			}
 			
 		}

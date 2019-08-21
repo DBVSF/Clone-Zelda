@@ -13,7 +13,9 @@ public class Entity {
 	public static BufferedImage WEAPON_EN = Game.spritesheet.getSprite(7*16, 0, 16, 16);
 	public static BufferedImage ENEMY_EN = Game.spritesheet.getSprite(6*16, 16, 16, 16);
 	public static BufferedImage AMMO_EN = Game.spritesheet.getSprite(8*16, 0, 16, 16);
-	
+	public static BufferedImage GUN_LEFT = Game.spritesheet.getSprite(8*16, 16, 16, 16);
+	public static BufferedImage GUN_RIGHT = Game.spritesheet.getSprite(9*16, 16, 16, 16);
+	public static BufferedImage BULLET_SHOOT = Game.spritesheet.getSprite(9*16, 0, 16, 16);
 	 //tudo oq tem colisão 
 	protected double x;
 	protected double y;
