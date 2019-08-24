@@ -15,7 +15,7 @@ public class Player extends Entity{
 	public double speed = 0.07;
 	public int right_dir = 0, left_dir = 1;
 	public int dir = right_dir;
-	
+	public double life=100,maxLife=100;
 	
 	private int frames = 0, maxFrames = 550, index = 0, maxIndex = 3;
 	private boolean moved = false;
@@ -25,7 +25,7 @@ public class Player extends Entity{
 	public int ammo = 0;
 	public boolean isDemaged = false;
 	private int demageFrames = 0;
-	public double life=100,maxLife=100;
+	
 	private boolean hasGun = false;
 	public boolean shoot = false;
 	
@@ -44,11 +44,8 @@ public class Player extends Entity{
 			rightPlayer[i] = Game.spritesheet.getSprite(32+(i*16), 0, 16, 16);
 			
 		}
-		
 		for (int i = 0; i < 4; i++) {
-			
 			leftPlayer[i] = Game.spritesheet.getSprite(32+(i*16), 16, 16, 16);
-			
 		}
 		
 		
@@ -72,7 +69,6 @@ public class Player extends Entity{
 			moved = true;
 			y+=speed;}
 		if (moved) {
-			
 			frames++;
 			if (frames == maxFrames) {
 				frames = 0;	
@@ -82,19 +78,6 @@ public class Player extends Entity{
 				}
 			}
 			
-			if (life <= 0) {
-				//reseta o game
-				Game.entities.clear();
-				Game.enemies.clear();
-				Game.entities = new ArrayList<Entity>();
-				Game.enemies = new ArrayList<Enemy>();
-				Game.spritesheet = new Spritesheet("/spritesheet.png");
-				Game.player = new Player (0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
-				Game.entities.add(Game.player);
-				Game.world = new World("/map.png");
-				return;
-				
-			}
 		}
 		//chama os metodos de pegar arma,ammo,lifepack
 		this.checkColiddionLifePack();
@@ -111,8 +94,6 @@ public class Player extends Entity{
 			
 			shoot = false;
 			if (hasGun && ammo > 0 ) {
-				
-			
 			ammo--;
 			int dx = 0;
 			int px = 0;
@@ -127,8 +108,16 @@ public class Player extends Entity{
 			BulletShoot bullet = new BulletShoot(this.getX()+px,this.getY()+py,3,3,null,dx,0);
 			Game.bullets.add(bullet);			
 		}
-		}	
-		
+			
+		}
+		if (life <= 0) {
+			life =0;
+			Game.gameState = "GAME_OVER";
+		}
+	updateCamera();
+	}
+	
+	public void updateCamera() {
 		//clamp limita a tela apenas nos tiles do mapa, tirando a parte preta da sala
 		Camera.x =Camera.clamp(this.getX()-(Game.WIDTH/2),0,World.WIDTH*16 - Game.WIDTH);
 		Camera.y =Camera.clamp(this.getY()-(Game.HEIGHT/2),0,World.HEIGHT*16 - Game.HEIGHT);

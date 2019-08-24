@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 //import java.awt.Graphics2D;
@@ -36,8 +37,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	 private boolean isRunning = true;
 	 public static final int WIDTH = 240;
 	 public static final int HEIGHT = 160;
-	 public final int SCALE = 3;
+	 public static int SCALE = 3;
 	 private BufferedImage image;
+	 private int CUR_LEVEL = 1, MAX_LEVEL = 2;
+	 private boolean restartGame = false;
 	
 	 public static List<Entity> entities;
 	 public static List<Enemy> enemies;
@@ -47,6 +50,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	 public static Player player;
 	 public static Random rand;
 	 public UI ui;
+	 public static String gameState = "Menu"; 
+	 private boolean showMessageGameOver = true;
+	 private int framesGameOver = 0; 
+	 public Menu menu;
 	
 
 	 
@@ -64,8 +71,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player (0,0,16,16,spritesheet.getSprite(32, 0, 16, 16));
 		entities.add(player);
-		world = new World("/map.png");
+		world = new World("/level1.png");
 		
+		menu = new Menu();
 		
 		
 	}
@@ -123,6 +131,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	}
 		
 	public void tick(){
+		if (gameState == "Normal") {
+			this.restartGame = false;
+		
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			e.tick();
@@ -130,8 +141,38 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		for (int i = 0; i < bullets.size(); i++) {
 			bullets.get(i).tick();
 		}
+		
+		//avança o jogo 
+		if(enemies.size() == 0){
+			CUR_LEVEL++;
+			if(CUR_LEVEL > MAX_LEVEL) {
+				CUR_LEVEL = 1;
+			}
+			String newWorld = "level" + CUR_LEVEL + ".png";
+			World.restarGame(newWorld);
+		}
+	    }else if(gameState == "GAME_OVER") {
+	    	//animação de morte
+	    	this.framesGameOver++;
+	    	if (this.framesGameOver == 350) {
+				this.framesGameOver = 0;
+				if (this.showMessageGameOver) 
+					this.showMessageGameOver = false;
+					else
+						this.showMessageGameOver= true;
+				
+			}
+	    	if (restartGame) {
+	    		this.restartGame = false;
+	    		this.gameState = "Normal";
+	    		CUR_LEVEL = 1;
+	    		String newWorld = "level" + CUR_LEVEL + ".png";
+				World.restarGame(newWorld);
+			}
+	    }else if (gameState == "Menu") {
+	    	menu.tick();
 	    }
-	
+	}
 	
 	
 	
@@ -160,7 +201,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		}
         
         ui.render(g);
-        
         g.dispose();
         g = bs.getDrawGraphics();
         //preenchendo o background
@@ -173,6 +213,20 @@ public class Game extends Canvas implements Runnable, KeyListener {
     
 		g.setFont(new Font("arial", Font.BOLD,20));
         g.drawString("VSF: " + player.ammo, 590, 75);
+        if (gameState == "GAME_OVER") {
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(new Color(0,0,0,100));
+			g2.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
+			
+				g.setFont(new Font("arial", Font.BOLD,20));
+				g.setColor(Color.white);
+		        g.drawString("Ó MERDA, JAKE PANÇA LHE SURROU",(WIDTH*SCALE) /3 , (HEIGHT*SCALE)/2 );
+		        g.setColor(Color.white);
+		        if(showMessageGameOver)
+		        	g.drawString(">pega no meu e retorne para a batalha<",(WIDTH*SCALE) /3 , (HEIGHT*SCALE)/2 + 40 );
+		}else if (gameState == "Menu") {
+			menu.render(g);
+		}
         bs.show();
     }
 	@Override
@@ -206,30 +260,34 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
 			//ANDAR PARA CIMA
 			player.up = false;
+			if(gameState == "Menu") {
+				menu.up = true;
+			}
 		}
-		else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+	else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
 			//ANDAR PARA BAIXO
 			player.down = false;
+			
+			if(gameState == "Menu") {
+				menu.down = true;
+			}
 		}if (e.getKeyCode()== KeyEvent.VK_X) {
 			player.shoot = true;
 		}
-		
-	}
-	@Override
+		if (e.getKeyCode()== KeyEvent.VK_ENTER) {
+			this.restartGame = true;
+			if (gameState =="Menu") {
+				menu.enter = true;
+			}
+		}
+		if (e.getKeyCode()== KeyEvent.VK_ESCAPE) {
+			gameState = "Menu";
+			menu.pause = true;
+		} 
+		}
+
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+	
 	}
-    
-	
-	 
-	 
-	
-	
-	
-	
-	
-	
-	
-
 }

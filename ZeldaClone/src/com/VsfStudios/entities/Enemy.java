@@ -11,13 +11,10 @@ import com.VsfStudio.world.World;
 public class Enemy extends Entity {
 	
 	private double speed = 0.01;
-	
 	private int maskx =8, masky = 8, maskw = 10, maskh =10; 
-	
 	private int frames = 0, maxFrames = 500, index = 0, maxIndex = 1;
-	
 	private BufferedImage[]sprites;
-	private int life = 10;
+	private int life = 10 ;
 	private boolean isDamaged = false;
 	private int demageFrames = 500,demageCurrent = 0;
 	
@@ -89,6 +86,7 @@ public class Enemy extends Entity {
 		}
 		
 	public void destroySelf() {
+		Game.enemies.remove(this);
 		Game.entities.remove(this);
 	}
 	

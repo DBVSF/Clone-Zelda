@@ -11,7 +11,7 @@ public class BulletShoot extends Entity {
 	private int dx, dy;
 	private double spd = 0.04;
 	
-	private int life = 6000, curLife = 0;
+	private int life = 4000, curLife = 0;
 	
 	
 	public BulletShoot(int x, int y, int w, int h, BufferedImage sprite,int dx, int dy) {
