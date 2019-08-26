@@ -58,7 +58,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	 
 	public Game () {
-		
+		Sound.musicBackground.loop();
 		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		initFrame();
@@ -272,7 +272,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				menu.down = true;
 			}
 		}if (e.getKeyCode()== KeyEvent.VK_X) {
+			Sound.atackSound.play();
 			player.shoot = true;
+			
 		}
 		if (e.getKeyCode()== KeyEvent.VK_ENTER) {
 			this.restartGame = true;
@@ -282,7 +284,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		}
 		if (e.getKeyCode()== KeyEvent.VK_ESCAPE) {
 			gameState = "Menu";
-			menu.pause = true;
+			menu.pause = true; 
 		} 
 		}
 
